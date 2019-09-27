@@ -1,0 +1,79 @@
+﻿@model List<CarModel>
+@{
+    ViewData["Title"] = "Car Model Selection";
+}
+
+<style>
+	fieldset {
+		display: block;
+		margin: 5% auto;
+		width:400px;
+	}
+
+	fieldset div {
+		margin-bottom: 5%;
+	}
+
+	fieldset div label {
+		width: 40%;
+	}
+
+	button {
+		display: block;
+		margin: 0 auto;
+	}
+
+	fieldset select {
+		width: 150px;
+	}
+</style>
+
+<form>
+	<fieldset>
+		<legend>Choose your car model:</legend>
+		<div>
+			<label for="text_filter">Filter Dropdown</label>
+			<input 
+				id="text_filter" 
+				type="text" 
+				name="text_filter"
+				onKeyUp="filterDropdown()"
+			/>
+		</div>
+		<div>
+			<label for="models">Filter</label>
+			@Html.DropDownList("car_models", new SelectList(Model, "id", "name"))
+		</div>
+		<div>
+			<button type="submit">Submit</button>
+		</div>
+	</fieldset>
+</form>
+
+<script>
+	const text_filter = document.getElementById("text_filter");
+	const car_models = document.getElementById("car_models");
+
+	function filterDropdown() {
+		const filter = text_filter.value;
+		let car_model_set = false;
+
+		for (let i = 0; i < car_models.length; i++) {
+			const option_element = car_models[i];
+
+			option_element.hidden = !option_element
+				.innerText
+				.toLowerCase()
+				.startsWith(filter.toLowerCase());
+
+			if (!option_element.hidden && !car_model_set) {
+				car_models.selectedIndex = i;
+				car_model_set = true;
+			}
+		}
+
+		if (!car_model_set) {
+			car_models.selectedIndex = 0;
+		}
+	}
+</script>
